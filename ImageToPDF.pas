@@ -95,7 +95,6 @@ procedure TForm2.btnConvertClick(Sender: TObject);
 var
 SaveResult, lWidth, lHeight: Integer;
 sFileName, oldName, tempName, newName: AnsiString;
-DocID: Integer;
 ImageID: Integer;
 dpix: Integer;
 dpiy: Integer;
@@ -117,20 +116,19 @@ try
     for sFileName in ListBox1.Items do
     begin
       // Create a blank document using Debenu Quick PDF Library
-      DocID := DPL.NewDocument();
-      DPL.SelectDocument(DocID);
+      DPL.SelectDocument(DPL.NewDocument());
 	  
-	  // Get the ID of the image
+      // Get the ID of the image
       ImageID := DPL.AddImageFromFile(sFileName, 0);
 
-	  // Check if the image ID was retrieved successfully
+      // Check if the image ID was retrieved successfully
       if ImageID = 0 then
       begin
         ShowMessage('Debenu Quick PDF Library was unable to load the image.');
       end else
 
         // Select the image that has just been loaded
-        ImageID := DPL.SelectedImage();
+        DPL.SelectImage(ImageID);
 
         // Get the vertical and horizontal resolution of image
         dpix := DPL.ImageHorizontalResolution();
@@ -153,7 +151,7 @@ try
           dpiy := 72;
         end;
 
-		// Get the image width and height in points
+	// Get the image width and height in points
         ImageWidthInPoints := DPL.ImageWidth() / dpix * 72.0; // assumming dpi units
         ImageHeightInPoints := DPL.ImageHeight() / dpiy * 72.0;
 
